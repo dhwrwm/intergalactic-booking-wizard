@@ -1,4 +1,3 @@
-import React from "react";
 import { Destination } from "@/types/booking";
 import Heading from "@/components/atoms/Heading";
 import Text from "@/components/atoms/Text";
@@ -16,9 +15,7 @@ export default function DestinationCard({
 }: DestinationCardProps) {
   return (
     <div
-      role="radio"
-      aria-checked={selected}
-      aria-label={`${destination.name}, Distance: ${destination.distance}, Travel Time: ${destination.travelTime}`}
+      data-option
       tabIndex={0}
       onClick={() => onSelect(destination.id)}
       onKeyDown={(e) => {
@@ -36,11 +33,7 @@ export default function DestinationCard({
       <div className="w-full">
         <Heading level="h3" className="mb-2">
           {destination.name}
-          {selected && (
-            <span className="ml-2 text-purple-400" aria-hidden="true">
-              ✓
-            </span>
-          )}
+          {selected && <span className="ml-2 text-purple-400">✓</span>}
         </Heading>
         <Text variant="caption" size="sm">
           Distance: {destination.distance}

@@ -1,11 +1,5 @@
+import { Destination } from "@/types/booking";
 import { NextResponse } from "next/server";
-
-export interface Destination {
-  id: string;
-  name: string;
-  distance: string;
-  travelTime: string;
-}
 
 const destinations: Destination[] = [
   { id: "mars", name: "Mars", distance: "225M km", travelTime: "7 months" },

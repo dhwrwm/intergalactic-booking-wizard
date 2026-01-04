@@ -106,21 +106,17 @@ export default function TravelersStep({ onNext, onBack }: TravelersStepProps) {
   );
 
   return (
-    <form onSubmit={handleSubmit} aria-label="Traveler information">
+    <form onSubmit={handleSubmit}>
       <h2 className="text-2xl font-bold text-white mb-6">Add Travelers</h2>
 
       {generalError && (
-        <div
-          className="mb-4 p-3 bg-red-900/50 border border-red-500 rounded-lg"
-          role="alert"
-          aria-live="polite"
-        >
+        <div className="mb-4 p-3 bg-red-900/50 border border-red-500 rounded-lg">
           <p className="text-red-400">{generalError}</p>
         </div>
       )}
 
       {/* Travelers List */}
-      <div className="space-y-4 mb-6" role="list" aria-label="Travelers">
+      <div className="space-y-4 mb-6">
         {state.travelers.map((traveler, index) => (
           <TravelerCard
             key={index}
@@ -140,14 +136,13 @@ export default function TravelersStep({ onNext, onBack }: TravelersStepProps) {
           variant="outline"
           onClick={addTraveler}
           className="w-full mb-6 border-2 border-dashed border-purple-500 text-purple-300 hover:bg-purple-900/30"
-          aria-label={`Add traveler (${state.travelers.length} of ${MAX_TRAVELERS})`}
         >
           + Add Traveler ({state.travelers.length}/{MAX_TRAVELERS})
         </Button>
       )}
 
       {!canAddMoreTravelers && (
-        <p className="text-purple-300 text-sm mb-6 text-center" role="status">
+        <p className="text-purple-300 text-sm mb-6 text-center">
           Maximum of {MAX_TRAVELERS} travelers reached
         </p>
       )}

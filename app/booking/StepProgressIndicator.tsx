@@ -12,7 +12,7 @@ export default function StepProgressIndicator({ step }: Props) {
   const currentStepIndex = STEPS.findIndex((s) => s.id === step);
 
   return (
-    <nav aria-label="Booking progress" className="mb-8">
+    <nav className="mb-8">
       <ol className="flex justify-between items-center">
         {STEPS.map((stepItem, index) => {
           const isActive = stepItem.id === step;
@@ -24,7 +24,6 @@ export default function StepProgressIndicator({ step }: Props) {
                 className={`text-center ${
                   isActive ? "text-purple-400 font-bold" : "text-purple-200"
                 }`}
-                aria-current={isActive ? "step" : undefined}
               >
                 <div
                   className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
@@ -34,7 +33,6 @@ export default function StepProgressIndicator({ step }: Props) {
                       ? "bg-purple-700"
                       : "bg-slate-600"
                   }`}
-                  aria-hidden="true"
                 >
                   {isCompleted ? (
                     <svg
@@ -54,16 +52,7 @@ export default function StepProgressIndicator({ step }: Props) {
                     stepItem.number
                   )}
                 </div>
-                <p className="text-sm">
-                  <span className="sr-only">
-                    {isActive
-                      ? "Current step: "
-                      : isCompleted
-                      ? "Completed: "
-                      : "Step "}
-                  </span>
-                  {stepItem.label}
-                </p>
+                <p className="text-sm">{stepItem.label}</p>
               </div>
             </li>
           );

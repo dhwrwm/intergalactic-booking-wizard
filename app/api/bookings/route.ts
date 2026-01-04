@@ -1,27 +1,11 @@
 import { NextResponse } from "next/server";
 import { MAX_TRAVELERS, MIN_TRAVELERS, API_DELAYS } from "@/lib/constants";
 import { logError, trackEvent } from "@/lib/monitoring";
-
-export interface Traveler {
-  fullName: string;
-  age: number;
-}
-
-export interface BookingRequest {
-  destinationId: string;
-  departureDate: string;
-  returnDate: string;
-  travelers: Traveler[];
-}
-
-export interface BookingResponse {
-  success: boolean;
-  bookingId: string;
-}
+import { BookingFormData, BookingResponse } from "@/types/booking";
 
 export async function POST(request: Request) {
   try {
-    const body: BookingRequest = await request.json();
+    const body: BookingFormData = await request.json();
 
     // Validate the booking data
     if (

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Destination } from "@/types/booking";
 import { logError } from "@/lib/monitoring";
+import { API_ENDPOINTS } from "@/lib/constants";
 
 export function useDestinations() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
@@ -13,7 +14,7 @@ export function useDestinations() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/destinations");
+        const response = await fetch(API_ENDPOINTS.DESTINATIONS);
 
         if (!response.ok) {
           throw new Error("Failed to fetch destinations");

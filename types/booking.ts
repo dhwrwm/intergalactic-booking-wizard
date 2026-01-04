@@ -22,6 +22,3 @@ export interface BookingResponse {
   bookingId?: string;
   error?: string;
 }
-
-export type Step = 1 | 2 | 3;
-

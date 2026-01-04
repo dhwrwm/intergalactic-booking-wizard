@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface ErrorMessageProps {
   message?: string;
   className?: string;
@@ -14,12 +12,7 @@ export default function ErrorMessage({
   if (!message) return null;
 
   return (
-    <p
-      id={id}
-      className={`text-red-400 text-sm mt-1 ${className}`.trim()}
-      role="alert"
-      aria-live="polite"
-    >
+    <p id={id} className={`text-red-400 text-sm mt-1 ${className}`.trim()}>
       {message}
     </p>
   );

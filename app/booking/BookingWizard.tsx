@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { isStateValidForStep } from "@/lib/booking";
-import { useA11yAnnounce } from "@/hooks/useA11yAnnounce";
 import DestinationStep from "@/components/booking/DestinationStep";
 import TravelersStep from "@/components/booking/TravelersStep";
 import ReviewStep from "@/components/booking/ReviewStep";
@@ -15,17 +14,10 @@ type Props = {
   step: string;
 };
 
-const STEP_TITLES = {
-  destination: "Step 1: Select Destination and Dates",
-  travelers: "Step 2: Add Traveler Information",
-  review: "Step 3: Review and Confirm Booking",
-};
-
 export default function BookingWizard({ step }: Props) {
   const router = useRouter();
   const { state, dispatch } = useBookingWizard();
   const [bookingId, setBookingId] = useState<string | null>(null);
-  const { announce } = useA11yAnnounce();
   const mainContentRef = useRef<HTMLDivElement>(null);
   const previousStepRef = useRef<string>(step);
 
@@ -38,32 +30,26 @@ export default function BookingWizard({ step }: Props) {
     }
   }, [state, step, router]);
 
-  // Announce step changes to screen readers and manage focus
+  // Manage focus on step changes
   useEffect(() => {
     if (previousStepRef.current !== step) {
-      const stepTitle = STEP_TITLES[step as keyof typeof STEP_TITLES];
-      if (stepTitle) {
-        announce(stepTitle);
-
-        // Focus the main content area after step change
-        setTimeout(() => {
-          if (mainContentRef.current) {
-            const heading = mainContentRef.current.querySelector("h2");
-            if (heading) {
-              heading.setAttribute("tabindex", "-1");
-              heading.focus();
-            }
+      // Focus the main content area after step change
+      setTimeout(() => {
+        if (mainContentRef.current) {
+          const heading = mainContentRef.current.querySelector("h2");
+          if (heading) {
+            heading.setAttribute("tabindex", "-1");
+            heading.focus();
           }
-        }, 100);
-      }
+        }
+      }, 100);
       previousStepRef.current = step;
     }
-  }, [step, announce]);
+  }, [step]);
 
   const handleBookingComplete = (id: string) => {
     setBookingId(id);
     dispatch({ type: "RESET" });
-    announce("Booking confirmed successfully!");
   };
 
   if (bookingId) {
@@ -72,14 +58,6 @@ export default function BookingWizard({ step }: Props) {
 
   return (
     <>
-      {/* Skip to main content link for keyboard users */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-purple-600 focus:text-white focus:rounded-lg"
-      >
-        Skip to main content
-      </a>
-
       <StepProgressIndicator step={step} />
 
       {/* Step Content */}
@@ -87,8 +65,6 @@ export default function BookingWizard({ step }: Props) {
         id="main-content"
         ref={mainContentRef}
         className="bg-slate-800 rounded-lg shadow-xl p-8"
-        role="main"
-        aria-label="Booking wizard content"
       >
         {step === "destination" && (
           <DestinationStep onNext={() => go("travelers")} />

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { format, parseISO } from "date-fns";
 import { useDestinations } from "@/hooks/useDestinations";
 import { Button } from "@/components/ui/button";
 import { useBookingWizard } from "@/app/booking/BookingWizardContext";
+import { API_ENDPOINTS } from "@/lib/constants";
 
 interface ReviewStepProps {
   onBack: () => void;
@@ -33,7 +35,7 @@ export default function ReviewStep({ onBack, onComplete }: ReviewStepProps) {
     };
 
     try {
-      const response = await fetch("/api/bookings", {
+      const response = await fetch(API_ENDPOINTS.BOOKINGS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,14 +57,6 @@ export default function ReviewStep({ onBack, onComplete }: ReviewStepProps) {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   return (
     <div>
       <h2 className="text-2xl font-bold text-white mb-6">
@@ -70,11 +64,7 @@ export default function ReviewStep({ onBack, onComplete }: ReviewStepProps) {
       </h2>
 
       {error && (
-        <div
-          className="mb-6 p-4 bg-red-900/50 border border-red-500 rounded-lg"
-          role="alert"
-          aria-live="assertive"
-        >
+        <div className="mb-6 p-4 bg-red-900/50 border border-red-500 rounded-lg">
           <p className="text-red-400">{error}</p>
         </div>
       )}
@@ -112,11 +102,11 @@ export default function ReviewStep({ onBack, onComplete }: ReviewStepProps) {
         <div className="space-y-2">
           <p className="text-white">
             <span className="text-purple-300">Departure:</span>{" "}
-            {formatDate(state.departureDate || "")}
+            {format(parseISO(state.departureDate ?? ""), "MMMM d, yyyy")}
           </p>
           <p className="text-white">
             <span className="text-purple-300">Return:</span>{" "}
-            {formatDate(state.returnDate || "")}
+            {format(parseISO(state.returnDate ?? ""), "MMMM d, yyyy")}
           </p>
         </div>
       </div>

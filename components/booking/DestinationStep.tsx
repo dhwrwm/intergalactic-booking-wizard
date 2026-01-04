@@ -17,6 +17,7 @@ import {
   isAfter,
 } from "date-fns";
 import { useBookingWizard } from "@/app/booking/BookingWizardContext";
+import { DATE_CONSTRAINTS } from "@/lib/constants";
 
 interface DestinationStepProps {
   onNext: () => void;
@@ -52,14 +53,6 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) {
-      // Focus first error field
-      const firstErrorKey = Object.keys(errors)[0];
-      if (firstErrorKey) {
-        const errorElement = document.querySelector(`[aria-invalid="true"]`);
-        if (errorElement) {
-          (errorElement as HTMLElement).focus();
-        }
-      }
       return;
     }
     onNext();
@@ -90,15 +83,17 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
             departureDate: format(date, "yyyy-MM-dd"),
             returnDate: "",
           });
+          setErrors({ ...errors, returnDate: "" });
         } else {
           dispatch({
             type: "SET_START_DATE",
             departureDate: format(date, "yyyy-MM-dd"),
           });
+          setErrors({ ...errors, departureDate: "" });
         }
       }
     },
-    [dispatch, state.returnDate]
+    [dispatch, errors, state.returnDate]
   );
 
   const handleEndDateChange = useCallback(
@@ -108,9 +103,10 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
           type: "SET_END_DATE",
           returnDate: format(date, "yyyy-MM-dd"),
         });
+        setErrors({ ...errors, returnDate: "" });
       }
     },
-    [dispatch]
+    [dispatch, errors]
   );
 
   if (loading) {
@@ -142,7 +138,7 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} aria-label="Destination and dates selection">
+    <form onSubmit={handleSubmit}>
       <h2 className="text-2xl font-bold text-white mb-6">
         Choose Your Destination
       </h2>
@@ -155,13 +151,7 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
           </legend>
           <div
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
-            role="radiogroup"
-            aria-label="Select destination"
-            aria-required="true"
-            aria-invalid={!!errors.destination}
-            aria-describedby={
-              errors.destination ? "destination-error" : undefined
-            }
+            data-error={!!errors.destination}
           >
             {destinations.map((dest) => (
               <DestinationCard
@@ -194,11 +184,13 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
             }
             onDateChange={handleStartDateChange}
             placeholder="Select Start Date"
-            fromDate={new Date("2147-01-01")}
+            fromDate={new Date(DATE_CONSTRAINTS.MIN_DATE)}
             error={!!errors.startDate}
             className="w-full"
           />
-          <ErrorMessage message={errors.startDate} />
+          {errors.departureDate && (
+            <ErrorMessage message={errors.departureDate} />
+          )}
         </div>
 
         {/* End Date */}
@@ -223,7 +215,7 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
             error={!!errors.endDate}
             className="w-full"
           />
-          <ErrorMessage message={errors.endDate} />
+          {errors.returnDate && <ErrorMessage message={errors.returnDate} />}
         </div>
       </div>
 

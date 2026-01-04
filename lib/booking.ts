@@ -4,10 +4,6 @@ export type BookingStep = (typeof BOOKING_STEPS)[number];
 
 export const DEFAULT_STEP: BookingStep = "destination";
 
-export function isBookingStep(value: string): value is BookingStep {
-  return (BOOKING_STEPS as readonly string[]).includes(value);
-}
-
 import { Traveler } from "@/types/booking";
 import { MAX_TRAVELERS, MIN_AGE, MAX_AGE } from "./constants";
 

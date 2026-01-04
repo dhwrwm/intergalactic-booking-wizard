@@ -14,13 +14,6 @@ export const API_ENDPOINTS = {
   BOOKINGS: "/api/bookings",
 } as const;
 
-// Booking steps
-export const BOOKING_STEPS = {
-  DESTINATION: "destination",
-  TRAVELERS: "travelers",
-  REVIEW: "review",
-} as const;
-
 // Session storage keys
 export const STORAGE_KEYS = {
   WIZARD_STATE: "wizard-state",
