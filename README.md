@@ -2,6 +2,8 @@
 
 A modern, accessible, and production-ready booking wizard for space tourism built with Next.js 16, TypeScript, and Tailwind CSS.
 
+> **🤖 AI-Assisted Development**: This project was built with the assistance of AI tools including [Augment VSCode Plugin](https://www.augmentcode.com/) and ChatGPT to accelerate development while maintaining high code quality and best practices.
+
 ## 📋 Table of Contents
 
 - [Features](#-features)
