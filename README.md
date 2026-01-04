@@ -34,7 +34,7 @@ A modern, accessible, and production-ready booking wizard for space tourism buil
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:dhwrwm/intergalactic-booking-wizard.git
    cd intergalactic-booking-wizard
    ```
 
