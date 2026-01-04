@@ -4,21 +4,31 @@ export type BookingStep = (typeof BOOKING_STEPS)[number];
 
 export const DEFAULT_STEP: BookingStep = "destination";
 
-import { Traveler } from "@/types/booking";
+import { Traveler, DestinationId, ISODateString } from "@/types/booking";
 import { MAX_TRAVELERS, MIN_AGE, MAX_AGE } from "./constants";
 
+/**
+ * Wizard state that persists across steps
+ */
 export interface BookingWizardState {
-  destinationId?: string;
-  departureDate?: string;
-  returnDate?: string;
+  destinationId?: DestinationId;
+  departureDate?: ISODateString;
+  returnDate?: ISODateString;
   travelers: Traveler[];
 }
 
+/**
+ * All possible actions for the booking wizard reducer
+ */
 export type BookingWizardAction =
-  | { type: "SET_DESTINATION"; destinationId: string }
-  | { type: "SET_START_DATE"; departureDate: string }
-  | { type: "SET_END_DATE"; returnDate: string }
-  | { type: "SET_DATES"; departureDate: string; returnDate: string }
+  | { type: "SET_DESTINATION"; destinationId: DestinationId }
+  | { type: "SET_START_DATE"; departureDate: ISODateString }
+  | { type: "SET_END_DATE"; returnDate: ISODateString }
+  | {
+      type: "SET_DATES";
+      departureDate: ISODateString;
+      returnDate: ISODateString;
+    }
   | { type: "SET_TRAVELERS"; travelers: Traveler[] }
   | { type: "ADD_TRAVELER" }
   | { type: "REMOVE_TRAVELER"; index: number }

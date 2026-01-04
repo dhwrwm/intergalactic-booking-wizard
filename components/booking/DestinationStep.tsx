@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useDestinations } from "@/hooks/useDestinations";
+import { DestinationId } from "@/types/booking";
 import Card from "@/components/atoms/Card";
 import DestinationCard from "@/components/molecules/DestinationCard";
 import Label from "../atoms/Label";
@@ -70,7 +71,10 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
   }, [state.departureDate, state.returnDate]);
 
   const handleDestinationSelect = (destinationId: string) => {
-    dispatch({ type: "SET_DESTINATION", destinationId });
+    dispatch({
+      type: "SET_DESTINATION",
+      destinationId: destinationId as DestinationId,
+    });
     setErrors({ ...errors, destination: "" });
   };
 

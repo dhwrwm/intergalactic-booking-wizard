@@ -6,6 +6,7 @@ import { useDestinations } from "@/hooks/useDestinations";
 import { Button } from "@/components/ui/button";
 import { useBookingWizard } from "@/app/booking/BookingWizardContext";
 import { API_ENDPOINTS } from "@/lib/constants";
+import { BookingResponse } from "@/types/booking";
 
 interface ReviewStepProps {
   onBack: () => void;
@@ -43,12 +44,13 @@ export default function ReviewStep({ onBack, onComplete }: ReviewStepProps) {
         body: JSON.stringify(bookingData),
       });
 
-      const data = await response.json();
+      const data: BookingResponse = await response.json();
 
-      if (data.success && data.bookingId) {
+      // Type-safe discriminated union handling
+      if (data.success) {
         onComplete(data.bookingId);
       } else {
-        setError(data.error || "Booking failed. Please try again.");
+        setError(data.error);
       }
     } catch {
       setError("Network error. Please try again.");
