@@ -201,6 +201,14 @@ Built-in from the start:
 - Creative space tourism theme
 - Real-world complexity (multi-step wizard, validation, accessibility)
 
+### What I Learned
+
+This assignment provided valuable hands-on experience with:
+
+- Discriminated unions for type-safe action creators
+- WCAG-compliant keyboard navigation with custom accessibility hooks
+- Designing a scalable reducer pattern with Context API for complex wizard flows with state persistence
+
 ---
 
 ## 🚀 Next Steps for Production
