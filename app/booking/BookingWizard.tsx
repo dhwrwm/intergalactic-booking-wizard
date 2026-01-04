@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { isStateValidForStep } from "@/lib/booking";
+import { useFocusManagement } from "@/hooks/useA11yAnnounce";
 import DestinationStep from "@/components/booking/DestinationStep";
 import TravelersStep from "@/components/booking/TravelersStep";
 import ReviewStep from "@/components/booking/ReviewStep";
@@ -20,6 +21,7 @@ export default function BookingWizard({ step }: Props) {
   const [bookingId, setBookingId] = useState<string | null>(null);
   const mainContentRef = useRef<HTMLDivElement>(null);
   const previousStepRef = useRef<string>(step);
+  const { focusElement } = useFocusManagement();
 
   const go = (s: string) => router.push(`/booking?step=${s}`);
 
@@ -30,7 +32,7 @@ export default function BookingWizard({ step }: Props) {
     }
   }, [state, step, router]);
 
-  // Manage focus on step changes
+  // Manage focus on step changes using the accessibility hook
   useEffect(() => {
     if (previousStepRef.current !== step) {
       // Focus the main content area after step change
@@ -39,13 +41,16 @@ export default function BookingWizard({ step }: Props) {
           const heading = mainContentRef.current.querySelector("h2");
           if (heading) {
             heading.setAttribute("tabindex", "-1");
-            heading.focus();
+            (heading as HTMLElement).focus();
           }
+        } else {
+          // Fallback to using the hook's focus method
+          focusElement("h2");
         }
       }, 100);
       previousStepRef.current = step;
     }
-  }, [step]);
+  }, [step, focusElement]);
 
   const handleBookingComplete = (id: string) => {
     setBookingId(id);

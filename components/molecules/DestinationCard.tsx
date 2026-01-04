@@ -6,24 +6,35 @@ export interface DestinationCardProps {
   destination: Destination;
   selected: boolean;
   onSelect: (id: string) => void;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
 export default function DestinationCard({
   destination,
   selected,
   onSelect,
+  onKeyDown,
 }: DestinationCardProps) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Handle Enter and Space for selection
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onSelect(destination.id);
+      return;
+    }
+
+    // Delegate to parent for arrow key navigation
+    if (onKeyDown) {
+      onKeyDown(e);
+    }
+  };
+
   return (
     <div
       data-option
       tabIndex={0}
       onClick={() => onSelect(destination.id)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onSelect(destination.id);
-        }
-      }}
+      onKeyDown={handleKeyDown}
       className={`h-auto p-4 rounded-lg border-2 text-left transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${
         selected
           ? "border-purple-500 bg-purple-900/50"

@@ -2,6 +2,10 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useDestinations } from "@/hooks/useDestinations";
+import {
+  useKeyboardNavigation,
+  useFocusManagement,
+} from "@/hooks/useA11yAnnounce";
 import { DestinationId } from "@/types/booking";
 import Card from "@/components/atoms/Card";
 import DestinationCard from "@/components/molecules/DestinationCard";
@@ -28,6 +32,23 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
   const { destinations, loading, error } = useDestinations();
   const { state, dispatch } = useBookingWizard();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { focusFirstError } = useFocusManagement();
+
+  const handleDestinationSelect = (destinationId: string) => {
+    dispatch({
+      type: "SET_DESTINATION",
+      destinationId: destinationId as DestinationId,
+    });
+    setErrors({ ...errors, destination: "" });
+  };
+
+  // Keyboard navigation for destination cards
+  const { handleKeyDown } = useKeyboardNavigation(
+    destinations.length,
+    (index) => {
+      handleDestinationSelect(destinations[index].id);
+    }
+  );
 
   const validate = (): boolean => {
     const newErrors: { [key: string]: string } = {};
@@ -54,6 +75,10 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) {
+      // Focus the first error field for better accessibility
+      setTimeout(() => {
+        focusFirstError();
+      }, 100);
       return;
     }
     onNext();
@@ -69,14 +94,6 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
     if (numberOfDays === 1) return "1 day";
     return `${numberOfDays} days`;
   }, [state.departureDate, state.returnDate]);
-
-  const handleDestinationSelect = (destinationId: string) => {
-    dispatch({
-      type: "SET_DESTINATION",
-      destinationId: destinationId as DestinationId,
-    });
-    setErrors({ ...errors, destination: "" });
-  };
 
   const handleStartDateChange = useCallback(
     (date?: Date) => {
@@ -157,12 +174,13 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
             data-error={!!errors.destination}
           >
-            {destinations.map((dest) => (
+            {destinations.map((dest, index) => (
               <DestinationCard
                 key={dest.id}
                 destination={dest}
                 selected={state.destinationId === dest.id}
                 onSelect={handleDestinationSelect}
+                onKeyDown={(e) => handleKeyDown(e, index)}
               />
             ))}
           </div>
@@ -245,7 +263,7 @@ export default function DestinationStep({ onNext }: DestinationStepProps) {
       </div>
 
       {/* Next Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-4">
         <Button type="submit" variant="default" size="lg">
           Next: Add Travelers →
         </Button>

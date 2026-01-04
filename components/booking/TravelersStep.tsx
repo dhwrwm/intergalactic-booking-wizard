@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { Traveler } from "@/types/booking";
+import { useFocusManagement } from "@/hooks/useA11yAnnounce";
 import TravelerCard from "@/components/molecules/TravelerCard";
 import { Button } from "@/components/ui/button";
 import { MAX_TRAVELERS, MIN_AGE, MAX_AGE } from "@/lib/constants";
@@ -21,6 +22,7 @@ export default function TravelersStep({ onNext, onBack }: TravelersStepProps) {
   const { state, dispatch } = useBookingWizard();
   const [errors, setErrors] = useState<{ [key: number]: TravelerErrors }>({});
   const [generalError, setGeneralError] = useState<string>("");
+  const { focusFirstError } = useFocusManagement();
 
   const addTraveler = useCallback(() => {
     dispatch({ type: "ADD_TRAVELER" });
@@ -95,9 +97,14 @@ export default function TravelersStep({ onNext, onBack }: TravelersStepProps) {
       e.preventDefault();
       if (validate()) {
         onNext();
+      } else {
+        // Focus the first error field for better accessibility
+        setTimeout(() => {
+          focusFirstError();
+        }, 100);
       }
     },
-    [validate, onNext]
+    [validate, onNext, focusFirstError]
   );
 
   const canAddMoreTravelers = useMemo(
@@ -153,7 +160,7 @@ export default function TravelersStep({ onNext, onBack }: TravelersStepProps) {
           ← Back
         </Button>
         <Button type="submit" variant="default" size="lg">
-          Next: Review Booking →
+          Next<span className="hidden md:inline">: Review Booking</span> →
         </Button>
       </div>
     </form>
