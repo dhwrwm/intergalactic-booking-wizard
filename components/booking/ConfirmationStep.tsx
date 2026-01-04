@@ -56,6 +56,14 @@ export default function ConfirmationStep({ bookingId }: ConfirmationStepProps) {
           </p>
         </div>
 
+        {/* Important Notice */}
+        <div className="mb-8 p-4 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
+          <p className="text-yellow-200 text-sm font-semibold">
+            ⚠️ Important: No refunds once you&apos;ve left Earth&apos;s
+            atmosphere.
+          </p>
+        </div>
+
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
